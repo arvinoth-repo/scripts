@@ -5,6 +5,8 @@ Install-Module -Name Az -AllowClobber -Scope CurrentUser
 
 #Commit 2
 
+This is new branch 1
+
 Get-AzResourceGroup
 
 #Create Azure VM
