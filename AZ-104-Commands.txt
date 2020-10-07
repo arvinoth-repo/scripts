@@ -1,6 +1,8 @@
 # Install Azure module for Posh
 Install-Module -Name Az -AllowClobber -Scope CurrentUser
 
+#Commit 1
+
 Get-AzResourceGroup
 
 #Create Azure VM
