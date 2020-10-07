@@ -1,3 +1,5 @@
+Making edit after branch 2
+
 # Install Azure module for Posh
 Install-Module -Name Az -AllowClobber -Scope CurrentUser
 
