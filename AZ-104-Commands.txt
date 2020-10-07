@@ -1,0 +1,53 @@
+# Install Azure module for Posh
+Install-Module -Name Az -AllowClobber -Scope CurrentUser
+
+Get-AzResourceGroup
+
+#Create Azure VM
+New-AzVm `
+-ResourceGroup "WWI" `
+-Name "PoshVM" `
+-Location "Australia East" `
+-VirtualNetworkName "VNET-WWI" `
+-SubnetName "S1" `
+-SecurityGroupName "PoshNSG" `
+-PublicIPAddressName "PoshPIP" `
+-OpenPorts 80,3389 `
+-Image "Win2016DataCenter"
+
+#Get IP Address of VMs
+ Get-AzPublicIpAddress -ResourceGroupName "WWI" | Select Name, IpAddress
+
+#Create/Manage Disks
+ - Create initial Config
+        $diskconfig = New-AzDiskConfig `
+            -SkuName "Premium_LRS" `
+            -Location "Australia East" `
+            -CreateOption Empty `
+            -DiskSizeGB 32
+
+ - Create data Disk
+        $datadisk = New-AzDisk `
+            -DiskName "AppDisk2" `
+            -ResourceGroupName "WWI" `
+            -Disk $diskconfig
+ - Get VM handle
+    $Vm = Get-AzVM -Name "App"
+
+ - Add Disk to VM
+ $vm = Add-AzVMDataDisk 
+    -VM $vm ` 
+    -Name "D1" `
+    -CreateOption Attach `
+    -ManagedDiskID $datadisk.Id `
+    -Lun 1
+ 
+ - Update VM for disk addition to take effect
+  Update-AzVM -ResourceGroupName "WWI" -VM $vm
+
+- Prepare the disk
+    Get-Disk | Where partitionstyle -eq 'RAW' | Initialize-disk -partitionstyle MBR | New-Partition -AssignDriveLetter -UseMaximumSize | Format-Volume -FileSystem NTFS -NewFileSystemLabel "Data2"
+
+-Verify the data disk
+    $Vm.StorageProfile.datadisk
+    
