@@ -3,6 +3,8 @@ Install-Module -Name Az -AllowClobber -Scope CurrentUser
 
 #Commit 1
 
+#Commit 2
+
 Get-AzResourceGroup
 
 #Create Azure VM
